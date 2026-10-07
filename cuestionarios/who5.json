@@ -1,0 +1,78 @@
+{
+  "nombre": "WHO-5",
+  "nombreCompleto": "Índice de Bienestar de la OMS - 5 ítems",
+  "descripcion": "Herramienta de tamizaje de bienestar emocional. NO es un diagnóstico.",
+  "idioma": "es-MX",
+  "version": "1.0",
+  "periodoReferencia": "Durante las últimas 2 semanas",
+  "items": [
+    {
+      "id": 1,
+      "texto": "Me he sentido alegre y de buen humor",
+      "opciones": [
+        { "valor": 0, "etiqueta": "En ningún momento" },
+        { "valor": 1, "etiqueta": "Algunas veces" },
+        { "valor": 2, "etiqueta": "Menos de la mitad del tiempo" },
+        { "valor": 3, "etiqueta": "Más de la mitad del tiempo" },
+        { "valor": 4, "etiqueta": "La mayor parte del tiempo" },
+        { "valor": 5, "etiqueta": "Todo el tiempo" }
+      ]
+    },
+    {
+      "id": 2,
+      "texto": "Me he sentido tranquilo/a y relajado/a",
+      "opciones": [
+        { "valor": 0, "etiqueta": "En ningún momento" },
+        { "valor": 1, "etiqueta": "Algunas veces" },
+        { "valor": 2, "etiqueta": "Menos de la mitad del tiempo" },
+        { "valor": 3, "etiqueta": "Más de la mitad del tiempo" },
+        { "valor": 4, "etiqueta": "La mayor parte del tiempo" },
+        { "valor": 5, "etiqueta": "Todo el tiempo" }
+      ]
+    },
+    {
+      "id": 3,
+      "texto": "Me he sentido activo/a y con energía",
+      "opciones": [
+        { "valor": 0, "etiqueta": "En ningún momento" },
+        { "valor": 1, "etiqueta": "Algunas veces" },
+        { "valor": 2, "etiqueta": "Menos de la mitad del tiempo" },
+        { "valor": 3, "etiqueta": "Más de la mitad del tiempo" },
+        { "valor": 4, "etiqueta": "La mayor parte del tiempo" },
+        { "valor": 5, "etiqueta": "Todo el tiempo" }
+      ]
+    },
+    {
+      "id": 4,
+      "texto": "Me he levantado sintiéndome descansado/a",
+      "opciones": [
+        { "valor": 0, "etiqueta": "En ningún momento" },
+        { "valor": 1, "etiqueta": "Algunas veces" },
+        { "valor": 2, "etiqueta": "Menos de la mitad del tiempo" },
+        { "valor": 3, "etiqueta": "Más de la mitad del tiempo" },
+        { "valor": 4, "etiqueta": "La mayor parte del tiempo" },
+        { "valor": 5, "etiqueta": "Todo el tiempo" }
+      ]
+    },
+    {
+      "id": 5,
+      "texto": "Mi vida diaria ha estado llena de cosas que me interesan",
+      "opciones": [
+        { "valor": 0, "etiqueta": "En ningún momento" },
+        { "valor": 1, "etiqueta": "Algunas veces" },
+        { "valor": 2, "etiqueta": "Menos de la mitad del tiempo" },
+        { "valor": 3, "etiqueta": "Más de la mitad del tiempo" },
+        { "valor": 4, "etiqueta": "La mayor parte del tiempo" },
+        { "valor": 5, "etiqueta": "Todo el tiempo" }
+      ]
+    }
+  ],
+  "rangosInterpretacion": [
+    { "min": 0, "max": 12, "nivel": "bajo", "etiqueta": "Bienestar bajo (se recomienda evaluación)" },
+    { "min": 13, "max": 25, "nivel": "normal", "etiqueta": "Bienestar normal" }
+  ],
+  "puntajeMaximo": 25,
+  "puntajeMinimo": 0,
+  "numItems": 5,
+  "notas": "El puntaje bruto va de 0 a 25. Se multiplica por 4 para obtener porcentaje (0-100). Bienestar bajo si puntaje < 13. La redacción en español de México debe verificarse con la versión validada oficial de la OMS. TODO: verificar redacción con versión validada por la OMS."
+}

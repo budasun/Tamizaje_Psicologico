@@ -1,0 +1,90 @@
+{
+  "nombre": "GAD-7",
+  "nombreCompleto": "Trastorno de Ansiedad Generalizada - 7 ítems",
+  "descripcion": "Herramienta de tamizaje para ansiedad generalizada. NO es un diagnóstico.",
+  "idioma": "es-MX",
+  "version": "1.0",
+  "periodoReferencia": "Durante las últimas 2 semanas",
+  "items": [
+    {
+      "id": 1,
+      "texto": "Sentirse nervioso/a, ansioso/a o con los nervios de punta",
+      "opciones": [
+        { "valor": 0, "etiqueta": "Ningún día" },
+        { "valor": 1, "etiqueta": "Varios días" },
+        { "valor": 2, "etiqueta": "Más de la mitad de los días" },
+        { "valor": 3, "etiqueta": "Casi todos los días" }
+      ]
+    },
+    {
+      "id": 2,
+      "texto": "No poder dejar de preocuparse o controlar las preocupaciones",
+      "opciones": [
+        { "valor": 0, "etiqueta": "Ningún día" },
+        { "valor": 1, "etiqueta": "Varios días" },
+        { "valor": 2, "etiqueta": "Más de la mitad de los días" },
+        { "valor": 3, "etiqueta": "Casi todos los días" }
+      ]
+    },
+    {
+      "id": 3,
+      "texto": "Preocuparse demasiado por diferentes cosas",
+      "opciones": [
+        { "valor": 0, "etiqueta": "Ningún día" },
+        { "valor": 1, "etiqueta": "Varios días" },
+        { "valor": 2, "etiqueta": "Más de la mitad de los días" },
+        { "valor": 3, "etiqueta": "Casi todos los días" }
+      ]
+    },
+    {
+      "id": 4,
+      "texto": "Dificultad para relajarse",
+      "opciones": [
+        { "valor": 0, "etiqueta": "Ningún día" },
+        { "valor": 1, "etiqueta": "Varios días" },
+        { "valor": 2, "etiqueta": "Más de la mitad de los días" },
+        { "valor": 3, "etiqueta": "Casi todos los días" }
+      ]
+    },
+    {
+      "id": 5,
+      "texto": "Estar tan inquieto/a que le cuesta trabajo quedarse quieto/a",
+      "opciones": [
+        { "valor": 0, "etiqueta": "Ningún día" },
+        { "valor": 1, "etiqueta": "Varios días" },
+        { "valor": 2, "etiqueta": "Más de la mitad de los días" },
+        { "valor": 3, "etiqueta": "Casi todos los días" }
+      ]
+    },
+    {
+      "id": 6,
+      "texto": "Irritarse o molestarse con facilidad",
+      "opciones": [
+        { "valor": 0, "etiqueta": "Ningún día" },
+        { "valor": 1, "etiqueta": "Varios días" },
+        { "valor": 2, "etiqueta": "Más de la mitad de los días" },
+        { "valor": 3, "etiqueta": "Casi todos los días" }
+      ]
+    },
+    {
+      "id": 7,
+      "texto": "Sentir miedo como si algo terrible fuera a pasar",
+      "opciones": [
+        { "valor": 0, "etiqueta": "Ningún día" },
+        { "valor": 1, "etiqueta": "Varios días" },
+        { "valor": 2, "etiqueta": "Más de la mitad de los días" },
+        { "valor": 3, "etiqueta": "Casi todos los días" }
+      ]
+    }
+  ],
+  "rangosInterpretacion": [
+    { "min": 0, "max": 4, "nivel": "ninguno", "etiqueta": "Sin ansiedad significativa" },
+    { "min": 5, "max": 9, "nivel": "leve", "etiqueta": "Ansiedad leve" },
+    { "min": 10, "max": 14, "nivel": "moderado", "etiqueta": "Ansiedad moderada" },
+    { "min": 15, "max": 21, "nivel": "grave", "etiqueta": "Ansiedad grave" }
+  ],
+  "puntajeMaximo": 21,
+  "puntajeMinimo": 0,
+  "numItems": 7,
+  "notas": "La redacción en español de México debe verificarse con la versión validada oficial. TODO: verificar redacción con versión validada por Pfizer/autores originales."
+}

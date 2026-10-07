@@ -1,0 +1,74 @@
+[
+  {
+    "id": "resp-001",
+    "fecha": "2025-01-15T10:30:00Z",
+    "nombre": "María González López",
+    "correo": "maria.gonzalez.ejemplo@correo.ficticio",
+    "phq9": [0, 0, 1, 0, 0, 0, 0, 0, 0],
+    "gad7": [0, 0, 0, 0, 0, 0, 0],
+    "who5": [5, 5, 5, 5, 5]
+  },
+  {
+    "id": "resp-002",
+    "fecha": "2025-01-16T14:22:00Z",
+    "nombre": "Carlos Ramírez Torres",
+    "correo": "carlos.ramirez.ejemplo@correo.ficticio",
+    "phq9": [1, 1, 2, 1, 1, 0, 0, 0, 0],
+    "gad7": [1, 1, 1, 1, 1, 0, 0],
+    "who5": [4, 4, 3, 4, 3]
+  },
+  {
+    "id": "resp-003",
+    "fecha": "2025-01-17T09:15:00Z",
+    "nombre": "Ana Patricia Martínez",
+    "correo": "ana.martinez.ejemplo@correo.ficticio",
+    "phq9": [2, 2, 3, 2, 2, 1, 1, 1, 0],
+    "gad7": [2, 2, 2, 2, 1, 1, 1],
+    "who5": [3, 3, 3, 2, 2]
+  },
+  {
+    "id": "resp-004",
+    "fecha": "2025-01-18T16:45:00Z",
+    "nombre": "Jorge Luis Hernández",
+    "correo": "jorge.hernandez.ejemplo@correo.ficticio",
+    "phq9": [3, 3, 3, 3, 2, 2, 1, 1, 0],
+    "gad7": [3, 2, 3, 2, 2, 2, 1],
+    "who5": [2, 2, 2, 2, 2]
+  },
+  {
+    "id": "resp-005",
+    "fecha": "2025-01-19T11:00:00Z",
+    "nombre": "Laura Elena Sánchez",
+    "correo": "laura.sanchez.ejemplo@correo.ficticio",
+    "phq9": [3, 3, 3, 3, 3, 3, 3, 2, 1],
+    "gad7": [3, 3, 3, 3, 3, 2, 2],
+    "who5": [0, 0, 1, 0, 0]
+  },
+  {
+    "id": "resp-006",
+    "fecha": "2025-01-20T08:30:00Z",
+    "nombre": "Roberto Carlos Díaz",
+    "correo": "roberto.diaz.ejemplo@correo.ficticio",
+    "phq9": [1, 0, 1, 0, 1, 0, 0, 0, 2],
+    "gad7": [0, 0, 0, 0, 0, 0, 0],
+    "who5": [4, 5, 4, 5, 4]
+  },
+  {
+    "id": "resp-007",
+    "fecha": "2025-01-21T13:10:00Z",
+    "nombre": "Gabriela Alejandra Ruiz",
+    "correo": "gabriela.ruiz.ejemplo@correo.ficticio",
+    "phq9": [0, 1, 0, 1, 0, 0, 0, 0, 0],
+    "gad7": [0, 1, 0, 1, 0, 0, 0],
+    "who5": [5, 4, 5, 4, 5]
+  },
+  {
+    "id": "resp-008",
+    "fecha": "2025-01-22T17:55:00Z",
+    "nombre": "Fernando Javier Ortiz",
+    "correo": "fernando.ortiz.ejemplo@correo.ficticio",
+    "phq9": [2, 2, 2, 2, 2, 2, 2, 2, 0],
+    "gad7": [2, 2, 2, 2, 2, 2, 2],
+    "who5": [3, 2, 3, 2, 3]
+  }
+]

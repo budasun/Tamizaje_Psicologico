@@ -1,0 +1,27 @@
+{
+  "name": "tamizaje-psicologico-automatizado",
+  "version": "1.0.0",
+  "description": "Sistema de tamizaje psicológico automatizado con Google Forms, Zapier, Google Sheets y Gmail. PHQ-9, GAD-7, WHO-5. Solo datos ficticios.",
+  "main": "src/scoring/index.js",
+  "type": "commonjs",
+  "scripts": {
+    "test": "node --test"
+  },
+  "keywords": [
+    "tamizaje",
+    "psicologico",
+    "phq9",
+    "gad7",
+    "who5",
+    "zapier",
+    "google-forms",
+    "automatizacion",
+    "salud-mental",
+    "mexico"
+  ],
+  "author": "",
+  "license": "MIT",
+  "engines": {
+    "node": ">=18.0.0"
+  }
+}

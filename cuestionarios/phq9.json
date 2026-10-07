@@ -1,0 +1,112 @@
+{
+  "nombre": "PHQ-9",
+  "nombreCompleto": "Cuestionario de Salud del Paciente - 9 ítems",
+  "descripcion": "Herramienta de tamizaje para depresión. NO es un diagnóstico.",
+  "idioma": "es-MX",
+  "version": "1.0",
+  "periodoReferencia": "Durante las últimas 2 semanas, ¿con qué frecuencia le han molestado los siguientes problemas?",
+  "items": [
+    {
+      "id": 1,
+      "texto": "Poco interés o placer en hacer cosas",
+      "opciones": [
+        { "valor": 0, "etiqueta": "Ningún día" },
+        { "valor": 1, "etiqueta": "Varios días" },
+        { "valor": 2, "etiqueta": "Más de la mitad de los días" },
+        { "valor": 3, "etiqueta": "Casi todos los días" }
+      ]
+    },
+    {
+      "id": 2,
+      "texto": "Sentirse decaído/a, deprimido/a o sin esperanza",
+      "opciones": [
+        { "valor": 0, "etiqueta": "Ningún día" },
+        { "valor": 1, "etiqueta": "Varios días" },
+        { "valor": 2, "etiqueta": "Más de la mitad de los días" },
+        { "valor": 3, "etiqueta": "Casi todos los días" }
+      ]
+    },
+    {
+      "id": 3,
+      "texto": "Dificultad para conciliar el sueño, mantenerlo o dormir demasiado",
+      "opciones": [
+        { "valor": 0, "etiqueta": "Ningún día" },
+        { "valor": 1, "etiqueta": "Varios días" },
+        { "valor": 2, "etiqueta": "Más de la mitad de los días" },
+        { "valor": 3, "etiqueta": "Casi todos los días" }
+      ]
+    },
+    {
+      "id": 4,
+      "texto": "Sentirse cansado/a o con poca energía",
+      "opciones": [
+        { "valor": 0, "etiqueta": "Ningún día" },
+        { "valor": 1, "etiqueta": "Varios días" },
+        { "valor": 2, "etiqueta": "Más de la mitad de los días" },
+        { "valor": 3, "etiqueta": "Casi todos los días" }
+      ]
+    },
+    {
+      "id": 5,
+      "texto": "Poco apetito o comer en exceso",
+      "opciones": [
+        { "valor": 0, "etiqueta": "Ningún día" },
+        { "valor": 1, "etiqueta": "Varios días" },
+        { "valor": 2, "etiqueta": "Más de la mitad de los días" },
+        { "valor": 3, "etiqueta": "Casi todos los días" }
+      ]
+    },
+    {
+      "id": 6,
+      "texto": "Sentirse mal consigo mismo/a, que es un fracaso o que ha defraudado a su familia",
+      "opciones": [
+        { "valor": 0, "etiqueta": "Ningún día" },
+        { "valor": 1, "etiqueta": "Varios días" },
+        { "valor": 2, "etiqueta": "Más de la mitad de los días" },
+        { "valor": 3, "etiqueta": "Casi todos los días" }
+      ]
+    },
+    {
+      "id": 7,
+      "texto": "Dificultad para concentrarse en cosas como leer el periódico o ver la televisión",
+      "opciones": [
+        { "valor": 0, "etiqueta": "Ningún día" },
+        { "valor": 1, "etiqueta": "Varios días" },
+        { "valor": 2, "etiqueta": "Más de la mitad de los días" },
+        { "valor": 3, "etiqueta": "Casi todos los días" }
+      ]
+    },
+    {
+      "id": 8,
+      "texto": "Moverse o hablar tan despacio que otras personas lo noten, o lo contrario: estar tan agitado/a que se mueva mucho más de lo habitual",
+      "opciones": [
+        { "valor": 0, "etiqueta": "Ningún día" },
+        { "valor": 1, "etiqueta": "Varios días" },
+        { "valor": 2, "etiqueta": "Más de la mitad de los días" },
+        { "valor": 3, "etiqueta": "Casi todos los días" }
+      ]
+    },
+    {
+      "id": 9,
+      "texto": "Pensamientos de que sería mejor estar muerto/a o de hacerse daño de alguna manera",
+      "opciones": [
+        { "valor": 0, "etiqueta": "Ningún día" },
+        { "valor": 1, "etiqueta": "Varios días" },
+        { "valor": 2, "etiqueta": "Más de la mitad de los días" },
+        { "valor": 3, "etiqueta": "Casi todos los días" }
+      ],
+      "nota": "Ítem crítico para evaluación de riesgo suicida"
+    }
+  ],
+  "rangosInterpretacion": [
+    { "min": 0, "max": 4, "nivel": "ninguno", "etiqueta": "Sin depresión significativa" },
+    { "min": 5, "max": 9, "nivel": "leve", "etiqueta": "Depresión leve" },
+    { "min": 10, "max": 14, "nivel": "moderado", "etiqueta": "Depresión moderada" },
+    { "min": 15, "max": 19, "nivel": "moderadamente_grave", "etiqueta": "Depresión moderadamente grave" },
+    { "min": 20, "max": 27, "nivel": "grave", "etiqueta": "Depresión grave" }
+  ],
+  "puntajeMaximo": 27,
+  "puntajeMinimo": 0,
+  "numItems": 9,
+  "notas": "La redacción en español de México debe verificarse con la versión validada oficial. TODO: verificar redacción con versión validada por Pfizer/autores originales."
+}
