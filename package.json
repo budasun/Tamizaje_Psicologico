@@ -5,7 +5,8 @@
   "main": "src/scoring/index.js",
   "type": "commonjs",
   "scripts": {
-    "test": "node --test"
+    "test": "node --test",
+    "demo": "node demo.js"
   },
   "keywords": [
     "tamizaje",

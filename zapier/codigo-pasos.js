@@ -15,18 +15,21 @@
 // ============================================
 // FUNCIONES DE SCORING (COPIADAS DEL PROYECTO)
 // ============================================
+// Reciben arreglos de números ya validados por convertirYValidarEntrada().
+// La coerción a número ocurre UNA sola vez, en el límite de entrada (con
+// Number()); aquí solo se valida el rango y se acumula.
 
 function calcularPHQ9(respuestas) {
   if (!Array.isArray(respuestas) || respuestas.length !== 9) {
     throw new Error('PHQ-9 requiere exactamente 9 respuestas');
   }
   for (let i = 0; i < 9; i++) {
-    const v = parseInt(respuestas[i], 10);
-    if (isNaN(v) || v < 0 || v > 3) {
+    const v = respuestas[i];
+    if (typeof v !== 'number' || !Number.isInteger(v) || v < 0 || v > 3) {
       throw new Error(`PHQ-9 item ${i+1}: valor inválido (${respuestas[i]})`);
     }
   }
-  const puntaje = respuestas.reduce((s, v) => s + parseInt(v, 10), 0);
+  const puntaje = respuestas.reduce((s, v) => s + v, 0);
   let nivel, etiqueta;
   if (puntaje <= 4) { nivel = 'ninguno'; etiqueta = 'Sin depresión significativa'; }
   else if (puntaje <= 9) { nivel = 'leve'; etiqueta = 'Depresión leve'; }
@@ -41,12 +44,12 @@ function calcularGAD7(respuestas) {
     throw new Error('GAD-7 requiere exactamente 7 respuestas');
   }
   for (let i = 0; i < 7; i++) {
-    const v = parseInt(respuestas[i], 10);
-    if (isNaN(v) || v < 0 || v > 3) {
+    const v = respuestas[i];
+    if (typeof v !== 'number' || !Number.isInteger(v) || v < 0 || v > 3) {
       throw new Error(`GAD-7 item ${i+1}: valor inválido (${respuestas[i]})`);
     }
   }
-  const puntaje = respuestas.reduce((s, v) => s + parseInt(v, 10), 0);
+  const puntaje = respuestas.reduce((s, v) => s + v, 0);
   let nivel, etiqueta;
   if (puntaje <= 4) { nivel = 'ninguno'; etiqueta = 'Sin ansiedad significativa'; }
   else if (puntaje <= 9) { nivel = 'leve'; etiqueta = 'Ansiedad leve'; }
@@ -60,12 +63,12 @@ function calcularWHO5(respuestas) {
     throw new Error('WHO-5 requiere exactamente 5 respuestas');
   }
   for (let i = 0; i < 5; i++) {
-    const v = parseInt(respuestas[i], 10);
-    if (isNaN(v) || v < 0 || v > 5) {
+    const v = respuestas[i];
+    if (typeof v !== 'number' || !Number.isInteger(v) || v < 0 || v > 5) {
       throw new Error(`WHO-5 item ${i+1}: valor inválido (${respuestas[i]})`);
     }
   }
-  const puntajeBruto = respuestas.reduce((s, v) => s + parseInt(v, 10), 0);
+  const puntajeBruto = respuestas.reduce((s, v) => s + v, 0);
   const puntajePorcentaje = puntajeBruto * 4;
   let nivel, etiqueta;
   if (puntajeBruto <= 12) { nivel = 'bajo'; etiqueta = 'Bienestar bajo (se recomienda evaluación)'; }

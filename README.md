@@ -68,12 +68,35 @@ Escala de respuesta del WHO-5: 5 "Todo el tiempo" · 4 "La mayor parte del tiemp
 # Clonar / entrar al directorio
 cd tamizaje-psicologico-automatizado
 
-# Instalar dependencias (ninguna requerida, solo Node.js nativo)
-npm install
-
-# Ejecutar pruebas
+# Ejecutar pruebas (49 pruebas con node:test)
 npm test
+
+# Ejecutar la demo con datos ficticios
+npm run demo
 ```
+
+No hay dependencias de npm que instalar: el proyecto usa solo el runtime de Node.js.
+
+### `npm run demo`
+
+Procesa los 8 perfiles de `datos-prueba/respuestas-ficticias.json` y muestra en consola:
+
+- Una tabla con perfil, puntajes (PHQ-9, GAD-7, WHO-5), niveles, número de alertas y prioridad máxima
+- El detalle de cada alerta generada, agrupado por perfil
+- Un resumen con conteo por nivel de prioridad
+
+No requiere credenciales ni servicios externos: todo corre localmente.
+
+Salida resumida:
+
+```
+ID         Perfil                    PHQ-9   GAD-7   WHO-5   Alertas  Prioridad
+resp-001   María González López      1/27    0/21    25/25   0        baja
+resp-005   Laura Elena Sánchez       24/27   19/21   1/25    4        alta
+resp-006   Roberto Carlos Díaz       5/27    0/21    22/25   1        alta
+```
+
+> `resp-006` ilustra la regla fail-safe: un puntaje total bajo (PHQ-9 5/27, nivel leve) pero con respuesta positiva en el ítem 9 dispara alerta de prioridad **alta** e inmediata.
 
 ### Requisitos
 - **Node.js 18+** (para `node:test` runner nativo)
@@ -86,7 +109,9 @@ npm test
 tamizaje-psicologico-automatizado/
 ├── README.md
 ├── .gitignore
+├── .gitattributes
 ├── package.json
+├── demo.js                # demo local con datos ficticios (npm run demo)
 ├── docs/
 │   ├── arquitectura.md
 │   ├── flujo-zapier.md
@@ -163,6 +188,7 @@ Archivo: `datos-prueba/respuestas-ficticias.json`
   - Privacidad by design (LFPDPPP, datos sensibles)
   - Protocolo de crisis con escalamiento humano
 - **Testing**: Node.js native test runner (`node:test`), cobertura de límites, casos edge
+- **Demo ejecutable**: Script de consola que procesa datos ficticios de extremo a extremo sin servicios externos
 - **Documentación técnica**: Arquitectura, flujos, protocolos, cumplimiento legal
 
 ## Próximos Pasos (Roadmap)
