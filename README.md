@@ -71,9 +71,43 @@ Google Forms ──▶ Zapier (Code by Zapier) ──▶ Google Sheets (registro
 | GAD-7 de 10 o más | Media | Aviso al profesional en 24–48 h |
 | WHO-5 de 12 o menos | Media | Aviso al profesional en 24–48 h |
 
+## Configuración paso a paso en Zapier
+
+Detalle campo por campo en [`docs/flujo-zapier.md`](docs/flujo-zapier.md).
+
+**1. Disparador.** Google Forms → *New Response in Spreadsheet*.
+
+**2. Code by Zapier** (JavaScript). Pega `zapier/codigo-pasos.js` sin modificarlo y mapea las 23 entradas en *Input Data*:
+
+| Entrada | Origen en el formulario |
+|---|---|
+| `phq9_1` … `phq9_9` | Ítems 1 a 9 del PHQ-9 (0–3) |
+| `gad7_1` … `gad7_7` | Ítems 1 a 7 del GAD-7 (0–3) |
+| `who5_1` … `who5_5` | Ítems 1 a 5 del WHO-5 (0–5) |
+| `nombre`, `correo` | Datos de contacto |
+
+Los 21 campos numéricos pasan por `convertirYValidarEntrada()`. Si alguno llega vacío o malformado, el paso lanza un error y el Zap se detiene en lugar de adivinar un valor.
+
+**3. Google Sheets → Create Spreadsheet Row.** Una columna por dato:
+
+| Columna | Output del paso 2 |
+|---|---|
+| Fecha, Nombre, Correo | `fecha`, `nombre`, `correo` |
+| PHQ-9 | `phq9_puntaje`, `phq9_nivel`, `phq9_respuestas` |
+| GAD-7 | `gad7_puntaje`, `gad7_nivel`, `gad7_respuestas` |
+| WHO-5 | `who5_puntaje_bruto`, `who5_puntaje_porcentaje`, `who5_nivel`, `who5_respuestas` |
+| Alertas | `alertas_count`, `prioridad_maxima`, `requiere_atencion_inmediata`, `alertas_json` |
+
+**4. Filter by Zapier** (opcional, solo para el correo al profesional): continuar si `prioridad_maxima` es `alta` **o** `media`.
+
+**5. Gmail → Send Email** a la persona. Usa [`src/plantillas/correo-resultados.md`](src/plantillas/correo-resultados.md) e interpola los `output`. Este correo va **siempre**, tenga o no alertas, e incluye la línea de crisis y el aviso de que es tamizaje y no diagnóstico.
+
+**6. Gmail → Send Email** al profesional. Solo si el filtro del paso 4 pasa. Usa [`src/plantillas/correo-alerta-profesional.md`](src/plantillas/correo-alerta-profesional.md), que además muestra el periodo de referencia del PHQ-9 para que el profesional interprete el puntaje en el timeframe correcto.
+
 ## Decisiones de diseño
 
 - **Falla de forma visible, nunca en silencio.** Si las respuestas del PHQ-9 no son 9 enteros válidos, o hay valores vacíos, la función lanza un error en lugar de omitir la regla de riesgo. En Zapier, eso detiene el Zap y deja constancia, en vez de ocultar un caso.
+- **El tipo se valida antes de convertir, no después.** Parece un detalle, pero `Number()` no devuelve `NaN` para todo lo que falta: `""`, `" "`, `null` y `[]` se convierten en **0**, y `true` en 1. Todos pasaban la validación de rango 0–3 como si fueran un cero legítimo, así que una respuesta en blanco en el ítem 9 se leía como "ningún día" y **no disparaba la alerta de riesgo suicida**: un falso negativo silencioso en la regla más grave del sistema, que mandaba a esa persona a la cola normal de 24–48 h en lugar de atención inmediata. Por eso se rechaza `null`, `undefined`, las cadenas vacías o solo con espacios, y cualquier tipo que no sea texto o número, *antes* de llamar a `Number()`.
 - **Validación en la frontera.** Los datos llegan de Zapier como texto. Se convierten y validan una sola vez al entrar; el resto del código trabaja con números ya validados.
 - **Funciones puras y sin dependencias.** Es fácil de probar, de auditar y de pegar en un paso de Code by Zapier, que no puede importar archivos locales.
 - **Pruebas en los límites.** Cada rango se prueba en sus extremos (por ejemplo, WHO-5 de 12 contra 13) y las reglas de alerta se prueban en conjunto.
@@ -102,12 +136,17 @@ Google Forms ──▶ Zapier (Code by Zapier) ──▶ Google Sheets (registro
 └── demo.js          demo ejecutable sin servicios externos
 ```
 
-Guía de configuración del flujo: [`docs/flujo-zapier.md`](docs/flujo-zapier.md).
+Documentación en `docs/`:
+
+- [`docs/flujo-zapier.md`](docs/flujo-zapier.md) — mapeo de campos, outputs y manejo de errores
+- [`docs/arquitectura.md`](docs/arquitectura.md) — componentes, flujo de datos y decisiones técnicas
+- [`docs/protocolo-crisis.md`](docs/protocolo-crisis.md) — escalamiento por prioridad y líneas de crisis
+- [`docs/privacidad.md`](docs/privacidad.md) — LFPDPPP, consentimiento expreso y checklist previo a producción
 
 ## Stack y habilidades
 
 - **JavaScript (Node.js, CommonJS):** funciones puras, validación de entradas, cero dependencias.
-- **Pruebas automatizadas:** `node:test`, casos límite y casos de error.
+- **Pruebas automatizadas:** 73 pruebas con `node:test`, entre casos límite, errores de validación y el archivo real de Zapier ejecutado con `inputData` inyectada, igual que el runtime de Code by Zapier.
 - **Automatización con Zapier:** Code by Zapier y mapeo de datos (flujo en construcción).
 - **Google Workspace:** Forms, Sheets y Gmail integrados mediante Zapier (en construcción).
 - **Diseño centrado en la persona usuaria:** lenguaje claro en español de México, línea de crisis en cada comunicación y aviso visible de "tamizaje, no diagnóstico".
