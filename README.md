@@ -1,224 +1,139 @@
 # Tamizaje Psicológico Automatizado
 
-> ⚠️ **AVISO IMPORTANTE**: Esta es una herramienta de **tamizaje (screening)**, **NO de diagnóstico**. Los resultados deben ser interpretados y validados por un profesional de la salud mental calificado. En caso de crisis, contacte a la Línea de la Vida: **800 911 2000** (México, 24/7, gratuito).
+Flujo automatizado que aplica tres cuestionarios de tamizaje (PHQ-9, GAD-7 y WHO-5), calcula puntajes, detecta casos que requieren atención prioritaria y avisa a un profesional. La lógica está en JavaScript puro, sin dependencias, con pruebas automatizadas y un demo que corre sin cuentas ni servicios externos.
 
-## Descripción
+> **Aviso:** esto es una herramienta de **tamizaje, no de diagnóstico**. Los resultados deben ser interpretados por un profesional de la salud mental. En México, en caso de crisis: Línea de la Vida **800 911 2000** (verifica el número vigente).
+> Todos los datos del proyecto son **ficticios**.
 
-Sistema automatizado de tamizaje psicológico que integra **Google Forms**, **Zapier (Code by Zapier en JavaScript)**, **Google Sheets** y **Gmail** para la detección temprana de síntomas de depresión, ansiedad y bajo bienestar emocional.
+## El problema y la solución
 
-Todos los contenidos orientados al usuario están en **español de México**. El proyecto utiliza **únicamente datos ficticios** para desarrollo y pruebas.
+Un tamizaje en papel o en hoja de cálculo se califica a mano, tarde y con errores. Peor aún, una respuesta de riesgo (pensamientos de hacerse daño) puede quedar enterrada si el puntaje total es bajo.
 
-## Cuestionarios Incluidos
+Este proyecto automatiza el proceso completo: formulario → cálculo → registro → correos → alerta al profesional. Su regla central es que **la respuesta al ítem 9 del PHQ-9 manda sobre el puntaje total**.
 
-| Cuestionario | Ítems | Rango | Qué Mide |
-|--------------|-------|-------|----------|
-| **PHQ-9** | 9 | 0–27 | Severidad de síntomas depresivos (periodo de referencia: últimas 2 semanas) |
-| **GAD-7** | 7 | 0–21 | Severidad de ansiedad generalizada (periodo de referencia: últimas 2 semanas) |
-| **WHO-5** | 5 | 0–25 (×4 = 0–100%) | Bienestar emocional (escala 0–5, periodo de referencia: últimas 2 semanas) |
+## Estado del proyecto
 
-Escala de respuesta del WHO-5: 5 "Todo el tiempo" · 4 "La mayor parte del tiempo" · 3 "Más de la mitad del tiempo" · 2 "Menos de la mitad del tiempo" · 1 "Algunas veces" · 0 "En ningún momento".
+| Componente | Estado |
+|---|---|
+| Lógica de puntuación (PHQ-9, GAD-7, WHO-5) | Listo, con pruebas |
+| Reglas de alerta | Listo, con pruebas |
+| Demo local con datos ficticios | Listo |
+| Flujo en Google Forms + Zapier + Sheets + Gmail | En construcción (capturas próximamente) |
+| Verificación de textos contra versiones oficiales en español | Pendiente |
 
-## Flujo del Sistema
+## Demo en 30 segundos
 
-```
-┌─────────────┐     ┌──────────────────┐     ┌───────────────┐
-│ Google Forms│────▶│  Zapier (Code)   │────▶│ Google Sheets │
-│  (Usuario)  │     │  • Scoring       │     │  (Registro)   │
-│             │     │  • Alertas       │     │               │
-└─────────────┘     └────────┬─────────┘     └───────────────┘
-                             │
-              ┌──────────────┴──────────────┐
-              ▼                             ▼
-       ┌─────────────┐               ┌─────────────┐
-       │   Gmail     │               │   Gmail     │
-       │ (Resultados │               │  (Alerta    │
-       │  Usuario)   │               │ Profesional)│
-       └─────────────┘               └─────────────┘
-              │                             │
-              ▼                             ▼
-       ┌─────────────────────────────────────────┐
-       │     Línea de la Vida: 800 911 2000     │
-       │     (En TODOS los correos al usuario)   │
-       └─────────────────────────────────────────┘
-```
-
-### Detalle del Flujo
-
-1. **Usuario** completa formulario en Google Forms (PHQ-9 + GAD-7 + WHO-5)
-2. **Zapier** detecta nueva respuesta → ejecuta `zapier/codigo-pasos.js`
-3. **Código** calcula scores, evalúa alertas, prepara outputs
-4. **Google Sheets** recibe fila con todos los datos + alertas
-5. **Gmail** envía resultados al usuario (siempre con línea de crisis)
-6. **Si hay alerta media/alta** → Gmail envía alerta a profesional
-
-## Reglas de Alerta
-
-| Condición | Prioridad | Acción |
-|-----------|-----------|--------|
-| PHQ-9 ítem 9 > 0 (pensamientos autolesión) | **ALTA** (Inmediata) | Alerta urgente a profesional + línea de crisis prominente |
-| PHQ-9 ≥ 10 (moderado o superior) | MEDIA | Alerta a profesional en 24-48h |
-| GAD-7 ≥ 10 (moderado o superior) | MEDIA | Alerta a profesional en 24-48h |
-| WHO-5 ≤ 12 (bienestar bajo, "se recomienda evaluación") | MEDIA | Alerta a profesional en 24-48h |
-
-**Fail-fast en el ítem 9**: si las respuestas del PHQ-9 no son un arreglo válido de 9 enteros (0–3), `evaluarAlertas()` lanza un `Error` en lugar de omitir la regla de riesgo suicida.
-
-**Fail-fast en las entradas de Zapier**: `convertirYValidarEntrada()` valida el tipo *antes* de aplicar `Number()`. Esto importa porque `Number()` no devuelve `NaN` para todos los valores ausentes:
-
-| Entrada | `Number()` | Sin la validación previa |
-|---------|-----------|--------------------------|
-| `""` | `0` | se aceptaba como "ningún día" |
-| `" "` | `0` | se aceptaba como "ningún día" |
-| `null` | `0` | se aceptaba como "ningún día" |
-| `[]` | `0` | se aceptaba como "ningún día" |
-| `undefined` | `NaN` | correcto |
-| `"3abc"` | `NaN` | correcto |
-
-Sin esa comprobación, una respuesta en blanco en el ítem 9 se leía como `0` y **no disparaba la alerta de riesgo suicida**: un falso negativo silencioso en la regla más grave del sistema. Ahora una respuesta vacía, nula o malformada detiene el flujo con un `Error` que identifica el campo exacto, y solo se aceptan cadenas con contenido o números.
-
-## Instalación y Pruebas
+Requiere Node.js 18 o superior. No hay nada que instalar.
 
 ```bash
-# Clonar / entrar al directorio
-cd tamizaje-psicologico-automatizado
-
-# Ejecutar pruebas (49 pruebas con node:test)
-npm test
-
-# Ejecutar la demo con datos ficticios
-npm run demo
+git clone https://github.com/budasun/Tamizaje_Psicologico
+cd Tamizaje_Psicologico
+npm test        # pruebas automatizadas
+npm run demo    # procesa 8 perfiles ficticios
 ```
 
-No hay dependencias de npm que instalar: el proyecto usa solo el runtime de Node.js.
-
-### `npm run demo`
-
-Procesa los 8 perfiles de `datos-prueba/respuestas-ficticias.json` y muestra en consola:
-
-- Una tabla con perfil, puntajes (PHQ-9, GAD-7, WHO-5), niveles, número de alertas y prioridad máxima
-- El detalle de cada alerta generada, agrupado por perfil
-- Un resumen con conteo por nivel de prioridad
-
-No requiere credenciales ni servicios externos: todo corre localmente.
-
-Salida resumida:
+Salida resumida del demo:
 
 ```
 ID         Perfil                    PHQ-9   GAD-7   WHO-5   Alertas  Prioridad
 resp-001   María González López      1/27    0/21    25/25   0        baja
+resp-004   Jorge Luis Hernández      18/27   15/21   10/25   3        media
 resp-005   Laura Elena Sánchez       24/27   19/21   1/25    4        alta
 resp-006   Roberto Carlos Díaz       5/27    0/21    22/25   1        alta
 ```
 
-> `resp-006` ilustra la regla fail-safe: un puntaje total bajo (PHQ-9 5/27, nivel leve) pero con respuesta positiva en el ítem 9 dispara alerta de prioridad **alta** e inmediata.
+`resp-006` es el caso que justifica el diseño: PHQ-9 total de 5 (nivel leve), pero con respuesta positiva en el ítem 9. Sin esa regla, el perfil iría a la cola normal. Con ella, sale con **prioridad alta e inmediata**.
 
-### Requisitos
-- **Node.js 18+** (para `node:test` runner nativo)
-- Cuenta de Google (Forms, Sheets, Gmail)
-- Cuenta de Zapier (plan que permita Code by Zapier)
-
-## Estructura del Proyecto
+## Cómo funciona
 
 ```
-tamizaje-psicologico-automatizado/
-├── README.md
-├── .gitignore
-├── .gitattributes
-├── package.json
-├── demo.js                # demo local con datos ficticios (npm run demo)
-├── docs/
-│   ├── arquitectura.md
-│   ├── flujo-zapier.md
-│   ├── protocolo-crisis.md
-│   └── privacidad.md
-├── cuestionarios/
-│   ├── phq9.json
-│   ├── gad7.json
-│   └── who5.json
+Google Forms ──▶ Zapier (Code by Zapier) ──▶ Google Sheets (registro)
+ (persona)        • valida entradas                │
+                  • calcula puntajes               ▼
+                  • evalúa alertas          Gmail ──▶ resultados a la persona
+                                                  └─▶ alerta al profesional
+                                                      (si hay prioridad media o alta)
+```
+
+1. La persona responde el formulario.
+2. Zapier detecta la respuesta y ejecuta `zapier/codigo-pasos.js`.
+3. El código valida, calcula puntajes y evalúa las alertas.
+4. Se registra una fila en Google Sheets.
+5. La persona recibe sus resultados, siempre con la línea de crisis.
+6. Si hay alerta media o alta, se avisa a un profesional.
+
+## Reglas de alerta
+
+| Condición | Prioridad | Acción prevista |
+|---|---|---|
+| PHQ-9, ítem 9 mayor que 0 | **Alta** | Aviso inmediato al profesional |
+| PHQ-9 de 10 o más | Media | Aviso al profesional en 24–48 h |
+| GAD-7 de 10 o más | Media | Aviso al profesional en 24–48 h |
+| WHO-5 de 12 o menos | Media | Aviso al profesional en 24–48 h |
+
+## Decisiones de diseño
+
+- **Falla de forma visible, nunca en silencio.** Si las respuestas del PHQ-9 no son 9 enteros válidos, o hay valores vacíos, la función lanza un error en lugar de omitir la regla de riesgo. En Zapier, eso detiene el Zap y deja constancia, en vez de ocultar un caso.
+- **Validación en la frontera.** Los datos llegan de Zapier como texto. Se convierten y validan una sola vez al entrar; el resto del código trabaja con números ya validados.
+- **Funciones puras y sin dependencias.** Es fácil de probar, de auditar y de pegar en un paso de Code by Zapier, que no puede importar archivos locales.
+- **Pruebas en los límites.** Cada rango se prueba en sus extremos (por ejemplo, WHO-5 de 12 contra 13) y las reglas de alerta se prueban en conjunto.
+- **Datos ficticios por diseño.** El proyecto nunca maneja información de personas reales.
+
+## Cuestionarios
+
+| Cuestionario | Ítems | Rango | Qué mide |
+|---|---|---|---|
+| PHQ-9 | 9 | 0–27 | Síntomas depresivos, últimas 2 semanas |
+| GAD-7 | 7 | 0–21 | Ansiedad generalizada, últimas 2 semanas |
+| WHO-5 | 5 | 0–25 (×4 = 0–100 %) | Bienestar emocional, últimas 2 semanas |
+
+## Estructura
+
+```
+├── cuestionarios/   preguntas, opciones y rangos (JSON)
 ├── src/
-│   ├── scoring/
-│   │   ├── phq9.js
-│   │   ├── gad7.js
-│   │   ├── who5.js
-│   │   └── index.js
-│   ├── alertas/
-│   │   └── reglas.js
-│   └── plantillas/
-│       ├── correo-resultados.md
-│       └── correo-alerta-profesional.md
-├── tests/
-│   ├── scoring.test.js
-│   └── zapier-codigo.test.js
-├── datos-prueba/
-│   └── respuestas-ficticias.json
-└── zapier/
-    └── codigo-pasos.js
+│   ├── scoring/     puntuación de cada prueba
+│   ├── alertas/     reglas de prioridad
+│   └── plantillas/  correos a la persona y al profesional
+├── zapier/          código autocontenido para Code by Zapier
+├── tests/           pruebas con node:test
+├── datos-prueba/    perfiles ficticios
+├── docs/            arquitectura, flujo de Zapier, protocolo de crisis, privacidad
+└── demo.js          demo ejecutable sin servicios externos
 ```
 
-## Configuración en Zapier
+Guía de configuración del flujo: [`docs/flujo-zapier.md`](docs/flujo-zapier.md).
 
-Ver guía completa en [`docs/flujo-zapier.md`](docs/flujo-zapier.md).
+## Stack y habilidades
 
-### Resumen Rápido
+- **JavaScript (Node.js, CommonJS):** funciones puras, validación de entradas, cero dependencias.
+- **Pruebas automatizadas:** `node:test`, casos límite y casos de error.
+- **Automatización con Zapier:** Code by Zapier y mapeo de datos (flujo en construcción).
+- **Google Workspace:** Forms, Sheets y Gmail integrados mediante Zapier (en construcción).
+- **Diseño centrado en la persona usuaria:** lenguaje claro en español de México, línea de crisis en cada comunicación y aviso visible de "tamizaje, no diagnóstico".
+- **Documentación técnica:** arquitectura, protocolo de crisis y consideraciones de privacidad.
 
-1. **Trigger**: Google Forms → New Response in Spreadsheet
-2. **Action**: Code by Zapier (JavaScript) → Pegar contenido de `zapier/codigo-pasos.js`
-   - Mapear `inputData` con campos del formulario
-3. **Action**: Google Sheets → Create Spreadsheet Row
-   - Mapear todos los `output` a columnas
-4. **Action**: Filter by Zapier (opcional) → `prioridad_maxima` es `alta` o `media`
-5. **Action**: Gmail → Send Email (usuario) → Plantilla `correo-resultados.md`
-6. **Action**: Gmail → Send Email (profesional) → Plantilla `correo-alerta-profesional.md` (solo si paso 4 pasa)
+## Limitaciones y siguientes pasos
 
-## Datos de Prueba
+- Los textos en español son una adaptación **pendiente de verificar** contra las versiones oficiales validadas. No usar con personas reales hasta hacerlo.
+- No es un dispositivo clínico ni sustituye la valoración de un profesional.
+- El envío de correos depende de Zapier y Gmail; falta publicar el flujo con capturas.
+- Siguientes pasos: verificar textos oficiales, publicar el flujo con capturas, agregar integración continua (GitHub Actions) que corra las pruebas en cada cambio y un tablero de seguimiento en Looker Studio.
 
-Archivo: `datos-prueba/respuestas-ficticias.json`
+## Créditos y atribución
 
-8 perfiles ficticios que cubren:
-- Sin síntomas (bienestar alto)
-- Leve (PHQ-9/GAD-7 leve, WHO-5 normal)
-- Moderado (alertas medias)
-- Grave (alertas medias)
-- **Riesgo suicida** (ítem 9 PHQ-9 > 0, prioridad ALTA)
-- Bienestar bajo (WHO-5 < 13)
-
-## Documentación
-
-| Archivo | Contenido |
-|---------|-----------|
-| `docs/arquitectura.md` | Visión general, componentes, flujo de datos |
-| `docs/flujo-zapier.md` | Configuración paso a paso en Zapier |
-| `docs/protocolo-crisis.md` | Línea de la Vida, escalamiento, responsabilidades |
-| `docs/privacidad.md` | LFPDPPP, consentimiento, medidas de seguridad, checklist producción |
-
-## Habilidades Demostradas
-
-- **JavaScript moderno**: ES Modules, funciones puras, validación robusta, sin dependencias externas
-- **Automatización con Zapier**: Code by Zapier, mapeo de datos, manejo de errores, flujos condicionales
-- **Google Workspace APIs**: Forms, Sheets, Gmail integration via Zapier
-- **Diseño centrado en la persona usuaria**:
-  - Lenguaje claro en español de México
-  - Línea de crisis en **todas** las comunicaciones
-  - Aviso prominente de "tamizaje, no diagnóstico"
-  - Privacidad by design (LFPDPPP, datos sensibles)
-  - Protocolo de crisis con escalamiento humano
-- **Testing**: Node.js native test runner (`node:test`), 73 pruebas con cobertura de límites y casos edge, incluyendo el archivo real de Zapier ejecutado como en producción
-- **Demo ejecutable**: Script de consola que procesa datos ficticios de extremo a extremo sin servicios externos
-- **Documentación técnica**: Arquitectura, flujos, protocolos, cumplimiento legal
-
-## Próximos Pasos (Roadmap)
-
-- [ ] Implementar envío real de correos (Nodemailer / Gmail API)
-- [ ] Dashboard de seguimiento (Looker Studio / Google Data Studio)
-- [ ] Validación de redacción oficial de cuestionarios (TODO en JSONs)
-- [ ] Versión multilingüe (es-MX, en-US)
-- [ ] API REST propia (reemplazar Zapier para mayor control)
-- [ ] Auditoría de seguridad y penetración pre-producción
-- [ ] Consentimiento digital firmado (e.firma / DocuSign)
+PHQ-9 y GAD-7 fueron desarrollados por Spitzer, Williams, Kroenke y colegas, con apoyo educativo de Pfizer. WHO-5 es un instrumento de la Organización Mundial de la Salud. *(Verifica los textos de atribución exactos de cada instrumento antes de publicar.)*
 
 ## Licencia
 
-MIT — Solo para fines educativos y de desarrollo. **No usar en producción sin cumplimiento legal completo (LFPDPPP, NOMs, ética profesional).**
+MIT. Solo para fines educativos y de desarrollo; no usar en producción sin cumplir la normativa aplicable (LFPDPPP, NOM) ni contar con supervisión profesional.
 
 ---
 
-**¿Preguntas?** Revisa `docs/` o abre un issue.
+## English summary
+
+Automated mental-health screening workflow (PHQ-9, GAD-7, WHO-5) built with plain JavaScript, Google Forms, Zapier, Google Sheets and Gmail. It validates inputs, scores each questionnaire, and flags high-priority cases, most importantly any positive answer to PHQ-9 item 9, regardless of total score. Dependency-free logic, automated tests (`node:test`), and a runnable local demo with fictitious data. **Screening tool, not a diagnosis. Zapier flow in progress; Spanish wording pending verification against official versions.**
+
+```bash
+npm test && npm run demo
+```
