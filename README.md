@@ -62,6 +62,19 @@ Escala de respuesta del WHO-5: 5 "Todo el tiempo" · 4 "La mayor parte del tiemp
 
 **Fail-fast en el ítem 9**: si las respuestas del PHQ-9 no son un arreglo válido de 9 enteros (0–3), `evaluarAlertas()` lanza un `Error` en lugar de omitir la regla de riesgo suicida.
 
+**Fail-fast en las entradas de Zapier**: `convertirYValidarEntrada()` valida el tipo *antes* de aplicar `Number()`. Esto importa porque `Number()` no devuelve `NaN` para todos los valores ausentes:
+
+| Entrada | `Number()` | Sin la validación previa |
+|---------|-----------|--------------------------|
+| `""` | `0` | se aceptaba como "ningún día" |
+| `" "` | `0` | se aceptaba como "ningún día" |
+| `null` | `0` | se aceptaba como "ningún día" |
+| `[]` | `0` | se aceptaba como "ningún día" |
+| `undefined` | `NaN` | correcto |
+| `"3abc"` | `NaN` | correcto |
+
+Sin esa comprobación, una respuesta en blanco en el ítem 9 se leía como `0` y **no disparaba la alerta de riesgo suicida**: un falso negativo silencioso en la regla más grave del sistema. Ahora una respuesta vacía, nula o malformada detiene el flujo con un `Error` que identifica el campo exacto, y solo se aceptan cadenas con contenido o números.
+
 ## Instalación y Pruebas
 
 ```bash
@@ -133,7 +146,8 @@ tamizaje-psicologico-automatizado/
 │       ├── correo-resultados.md
 │       └── correo-alerta-profesional.md
 ├── tests/
-│   └── scoring.test.js
+│   ├── scoring.test.js
+│   └── zapier-codigo.test.js
 ├── datos-prueba/
 │   └── respuestas-ficticias.json
 └── zapier/
@@ -187,7 +201,7 @@ Archivo: `datos-prueba/respuestas-ficticias.json`
   - Aviso prominente de "tamizaje, no diagnóstico"
   - Privacidad by design (LFPDPPP, datos sensibles)
   - Protocolo de crisis con escalamiento humano
-- **Testing**: Node.js native test runner (`node:test`), cobertura de límites, casos edge
+- **Testing**: Node.js native test runner (`node:test`), 73 pruebas con cobertura de límites y casos edge, incluyendo el archivo real de Zapier ejecutado como en producción
 - **Demo ejecutable**: Script de consola que procesa datos ficticios de extremo a extremo sin servicios externos
 - **Documentación técnica**: Arquitectura, flujos, protocolos, cumplimiento legal
 

@@ -55,7 +55,7 @@ function imprimirDetalleAlertas(resultados) {
   const conAlertas = resultados.filter(r => r.alertas.length > 0);
 
   if (conAlertas.length === 0) {
-    console.log('Ningun perfil genero alertas.\n');
+    console.log('Ningún perfil generó alertas.\n');
     return;
   }
 
@@ -89,7 +89,7 @@ function imprimirResumen(resultados) {
 }
 
 function main() {
-  console.log('Tamizaje psicologico automatizado - Demo');
+  console.log('Tamizaje psicológico automatizado - Demo');
   console.log('=========================================');
   console.log('');
 
@@ -108,9 +108,9 @@ function main() {
   imprimirDetalleAlertas(resultados);
   imprimirResumen(resultados);
 
-  console.log('Aviso: esto es un tamizaje, NO un diagnostico.');
-  console.log('Los datos usados son ficticios, unicamente para desarrollo.');
-  console.log('En caso de crisis real: Linea de la Vida 800 911 2000 (Mexico, 24/7).');
+  console.log('Aviso: esto es un tamizaje, NO un diagnóstico.');
+  console.log('Los datos usados son ficticios, únicamente para desarrollo.');
+  console.log('En caso de crisis real: Línea de la Vida 800 911 2000 (México, 24/7).');
 }
 
 main();

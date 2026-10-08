@@ -79,15 +79,54 @@ function calcularWHO5(respuestas) {
 // ============================================
 // FUNCIÓN DE VALIDACIÓN Y CONVERSIÓN
 // ============================================
+// IMPORTANTE: el tipo se valida ANTES de aplicar Number(), porque
+// Number() convierte varios valores ausentes en 0 en lugar de NaN:
+//   Number("") -> 0    Number(" ") -> 0    Number(null) -> 0
+//   Number([])  -> 0    Number(true) -> 1
+// Sin esta comprobación, una respuesta en blanco del ítem 9 del PHQ-9
+// se leería como 0 ("ningún día") y NO generaría la alerta de riesgo
+// suicida: un falso negativo silencioso en la regla más grave.
+// Por eso solo se acepta string o number, y las cadenas deben tener
+// contenido antes de convertirse.
 
 function convertirYValidarEntrada(valor, nombreCampo, min, max) {
+  if (valor === null || valor === undefined) {
+    throw new Error(
+      `${nombreCampo}: sin respuesta (${valor === null ? 'null' : 'undefined'}). ` +
+      'Una respuesta ausente nunca debe interpretarse como 0.'
+    );
+  }
+
+  if (typeof valor !== 'string' && typeof valor !== 'number') {
+    throw new Error(
+      `${nombreCampo}: tipo no soportado (${Array.isArray(valor) ? 'array' : typeof valor}). ` +
+      'Solo se admiten cadenas o números.'
+    );
+  }
+
+  if (typeof valor === 'string' && valor.trim() === '') {
+    throw new Error(
+      `${nombreCampo}: respuesta vacía. ` +
+      'Una respuesta vacía nunca debe interpretarse como 0.'
+    );
+  }
+
   const num = Number(valor);
-  if (isNaN(num)) {
-    throw new Error(`${nombreCampo}: valor no numérico (${valor})`);
+
+  if (Number.isNaN(num)) {
+    throw new Error(`${nombreCampo}: valor no numérico ("${valor}")`);
   }
-  if (!Number.isInteger(num) || num < min || num > max) {
-    throw new Error(`${nombreCampo}: valor fuera de rango (${num}), debe ser entero entre ${min} y ${max}`);
+
+  if (!Number.isInteger(num)) {
+    throw new Error(`${nombreCampo}: valor no entero (${num})`);
   }
+
+  if (num < min || num > max) {
+    throw new Error(
+      `${nombreCampo}: valor fuera de rango (${num}), debe ser entero entre ${min} y ${max}`
+    );
+  }
+
   return num;
 }
 
